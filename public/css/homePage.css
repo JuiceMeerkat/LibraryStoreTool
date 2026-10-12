@@ -1,0 +1,43 @@
+ul {
+    font-size: 20px;
+
+    line-height: 40px;
+}
+
+p {
+    font-size: 30px;
+}
+
+/* #whatIsAnISBNdiv {
+    border-radius: 20px;
+    outline: 2px solid black;
+
+    padding: 20px;
+
+    width: fit-content;
+} */
+
+#whatIsAnISBNdiv {
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: row;
+
+    /* justify-content: space-between; */
+    /* align-items: ; */
+}
+
+#whatIsAnISBNdiv #textDiv p{
+    font-size: 18px;
+
+    line-height: 40px;
+}
+
+#whatIsAnISBNdiv {
+    margin-left: 10px;
+}
+
+#whatIsAnISBNdiv #coverWithISBNimg {
+    width: 25vw;
+    margin-right: 10px;
+}

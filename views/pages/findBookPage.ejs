@@ -1,0 +1,246 @@
+<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find A Book</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/findBookPage.css">
+</head>
+<body>
+    <header><% if (user) { %>
+            <%- include('../partials/header-logged-in.ejs'); %>
+          <% } else if (!user) { %>
+            <%- include('../partials/header-not-logged-in.ejs'); %>
+          <% } else { %>
+            <%- console.log("su'in else") %>
+          <% } %>
+    </header>
+
+    <main>
+        <h1>Find a book</h1>
+
+        <section id="mainSection">
+            <div id="bookFindingDiv">
+                <section id="SearchForBooksDiv" class="formSection">
+                    <!-- <h3>Find a book </h3> -->
+                    <p>Type in the ISBN number of a book to see its details</p>
+
+                    <form action="/api/volumes?" method="GET" id="SearchForBooksForm">
+                        <div id="inputOne">
+                            <label for="ISBNfield">ISBN:</label>
+                            <input type="text" id="ISBNfield" name="ISBN" placeholder="E.g. 0-333-71093-2">
+                        </div>
+
+                        <input type="submit" id="submitButton" name="submitButton" placeholder="Submit" value="Find book">
+                    </form>
+
+                    <p>All information is pulled from the 
+                        <a href="https://developers.google.com/books/docs/v1/using">Google Books API</a>
+                    </p>
+                </section>
+
+                <section id="whatIsAnISBNdiv">
+                    <!-- <h2>What is an ISBN?</h2> -->
+                    <p> <i>What is an ISBN?</i> An ISBN is a 10 or 13 digit number which can uniquely identify any book <br> Looking for examples? Try: 9780544272996, 0330513087, or  9781407186115</p>
+                </section>
+
+                <section id="resultsDiv">
+
+                    <img id="viewerCanvasDiv">
+
+                    <!-- <div id="informationDiv">
+                        <div id="titleDiv"> Title </div>
+                        <div id="subtitleDiv"> Subtitle </div>
+                        <div id="authorDiv"> Author </div>
+                        <div id="datePublishedDiv"> Date Published </div>
+                        <div id="descriptionDiv"> Description </div>
+                    </div> -->
+                </section>
+            </div>
+
+            <div id="addToLibraryStepsDiv">
+                <h2>Want to add this book to your library?</h2>
+                <p>Click the Your Collections button at the top and add it to a collection.</p>
+            </div>
+        </section>
+
+    </main>
+
+
+    <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+
+    <script>
+        
+
+
+        const formR = document.querySelector('#SearchForBooksForm');
+        const resultsDivR = document.querySelector('#resultsDiv');
+        const ISBNfieldR = document.querySelector('#ISBNfield');
+        const informationDivR = document.querySelector('#informationDiv');
+
+        console.log('formR : ', formR);
+        console.log('resultsDivR : ', resultsDivR);
+        console.log('ISBNfieldR : ', ISBNfieldR);
+        console.log('informationDivR : ', informationDivR);
+        // console.log('viewerCanvasDivR : ', viewerCanvasDivR);
+        
+
+        // console.log('resultsDivR.children[0].innerHTML : ', resultsDivR.children[0].innerHTML);
+
+        const resultsDivTemplate = `
+            <img id="viewerCanvasDiv">
+                
+            <div id="informationDiv">
+                
+            </div>
+        `
+
+        // <div id="titleDiv"> Title </div>
+        // <div id="subtitleDiv"> Subtitle </div>
+        // <div id="authorDiv"> Authors </div>
+        // <div id="datePublishedDiv"> Date Published </div>
+        // <div id="descriptionDiv"> Description </div>
+
+
+
+        formR.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // STEP 1 - load important book data like title, subtitle, author, etc.
+            // Say loading to show you've received the button click
+            showLoading();
+
+            // Fetch the data from the endpoint
+            const isbn = ISBNfieldR.value;
+            const info = await fetchBookData(isbn);
+            const bookStatsInfo = info
+            console.log('bookStatsInfo : ', bookStatsInfo)
+
+            // Show the data in resultsDivR
+            showDataInDiv(info);
+
+            // // STEP 2 - load the front cover image of the book
+
+            const viewerCanvasDivR = document.querySelector('#viewerCanvasDiv');
+
+            let thumbnail = bookStatsInfo.thumbnail
+            // thumbnail = String(thumbnail)
+            // console.log('dndnnddnthumbnail : ', thumbnail)
+            let height = 300;
+            thumbnail = thumbnail + `&fife=h${height}`;
+
+            console.log('thumbnail :', thumbnail);
+
+            viewerCanvasDivR.src = thumbnail;
+            console.log('viewCanvasDivR.src : ', viewerCanvasDivR.src);
+
+
+        })
+
+        const showLoading = () => {
+            resultsDivR.innerHTML = ``;
+
+            const tempChild = document.createElement('p');
+            tempChild.innerHTML = `Loading...`;
+
+            resultsDivR.appendChild(tempChild);
+        }
+
+        const fetchBookData = async (isbn) => {
+            isbn = String(isbn);
+            isbn = isbn.replace(/\D/g,''); // Removes anything non-numeric
+            console.log('isbn (with everything non-numeric removed): ', isbn);
+
+            const url = `/api/volumes?ISBN=${isbn}`;
+            console.log('url : ', url)
+
+            const response = await fetch(url);
+            // console.log('response : ', response);
+            const responseJSON = await response.json();
+            // const result = responseJSON.result;
+            // const volumeInfo = result.items[0].volumeInfo
+
+            console.log('responseJSON : ', responseJSON);
+
+            const result = responseJSON.newResults
+            
+            return result
+        }
+
+        const showDataInDiv = (info) => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = resultsDivTemplate;
+
+            const informationDivRTemp = tempDiv.children[1];
+            
+            if (info.title) {
+                const titleChild = document.createElement('div');
+                titleChild.id = 'titleDiv';
+                titleChild.classList += 'detailDiv';
+                titleChild.innerHTML = info.title
+                informationDivRTemp.appendChild(titleChild);
+            }
+            if (info.subtitle) {
+                const subtitleChild = document.createElement('div');
+                subtitleChild.id = 'subtitleDiv';
+                subtitleChild.classList += 'detailDiv';
+                subtitleChild.innerHTML = info.subtitle;
+                informationDivRTemp.appendChild(subtitleChild);
+            }
+            if (info.isbn) {
+                const isbnChild = document.createElement('div');
+                isbnChild.id = 'isbnDiv';
+                isbnChild.classList += 'detailDiv';
+                isbnChild.innerHTML = info.isbn;
+                informationDivRTemp.appendChild(isbnChild);
+            }
+            if (info.authors) {
+                const authorsChild = document.createElement('div');
+                authorsChild.id = 'authorsDiv';
+                authorsChild.classList += 'detailDiv';
+                authorsChild.innerHTML = info.authors
+                informationDivRTemp.appendChild(authorsChild);
+            }
+            if (info.datePublished) {
+                const datePublishedChild = document.createElement('div');
+                datePublishedChild.id = 'datePublishedDiv';
+                datePublishedChild.classList += 'detailDiv';
+                datePublishedChild.innerHTML = info.datePublished
+                informationDivRTemp.appendChild(datePublishedChild);
+            }
+            if (info.description) {
+                const descriptionChild = document.createElement('div');
+                descriptionChild.id = 'descriptionDiv';
+                descriptionChild.classList += 'detailDiv';
+                descriptionChild.innerHTML = info.description
+                informationDivRTemp.appendChild(descriptionChild);
+            }
+
+
+
+            // if (info.subtitle) {
+            //     informationDivRTemp.children[1].innerHTML = info.subtitle;
+            // }
+            // if (info.firstAuthor) {
+            //     informationDivRTemp.children[2].innerHTML = info.firstAuthor;
+            // }
+            // if (info.datePublished) {
+            //     informationDivRTemp.children[3].innerHTML = info.datePublished;
+            // }
+            // if (info.description) {
+            //     informationDivRTemp.children[4].innerHTML = info.description;
+            // }
+
+            resultsDivR.innerHTML = ``;
+            resultsDivR.innerHTML = tempDiv.innerHTML;
+        }
+
+
+
+        window.showLoading = showLoading;
+        window.fetchBookData = fetchBookData;
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* #loginForm {
+    display: flex;
+    flex-direction: column;
+
+    width: 300px;
+
+    margin: 20px;
+    padding: 30px;
+
+    outline: 3px  #C76D7E solid;
+    border-radius: 20px;
+
+}
+
+#loginForm input {
+    margin: 10px;
+} */
+
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+}

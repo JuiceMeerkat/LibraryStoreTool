@@ -1,0 +1,119 @@
+form {
+    display: flex;
+    flex-direction: column;
+
+    width: 350px;
+}
+
+
+#resultsDiv {
+    /* margin-left: 50vw; */
+
+    outline: 2px solid black;
+
+    margin-top: 40px;
+
+    border-radius: 40px;
+
+    padding: 30px;
+
+    /* min-height: 800px; */
+    height: fit-content;
+
+    display: flex;
+    flex-direction: row;
+}
+
+#titleDiv {
+    font-size: 40px;
+
+    color: black;
+}
+
+#subtitleDiv {
+    font-size: 35px;
+
+    color: black;
+
+}
+
+#authorsDiv {
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: black;
+}
+
+#datePublishedDiv {
+    font-size: 20px;
+
+    color: black;
+}
+
+#description {
+    font-size: 20px;
+
+    color: black;
+}
+
+
+#viewerCanvasDiv {
+    height: 300px;
+    /* width: 40vw; */
+
+    padding: 20px;
+}
+
+#addToCollectionDiv {
+    outline: 1px black solid;
+    width: fit-content;
+    margin: 20px;
+    /* margin-left: 50vw; */
+    /* margin-right: 50vw; */
+}
+
+#addToCollectionDiv h2 {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#addToCollectionDiv form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ #addToCollection form label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+/* #mainSection {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-around;
+} */
+
+.detailDiv {
+    margin: 15px;
+}
+
+/* #titleDiv */
+
+#addToLibraryStepsDiv {
+    margin: 10px;
+    /* outline: 2px solid black; */
+
+    padding: 10px;
+    
+    border-radius: 20px;
+
+    width: fit-content;
+}

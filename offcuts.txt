@@ -1,0 +1,187 @@
+<script type="text/javascript">
+
+        
+
+        google.books.load();
+        const viewerCanvasDivR = document.getElementById('viewerCanvasDiv');
+
+        const initialise = () => {
+            let viewer = new google.books.DefaultViewer(viewerCanvasDivR);
+            console.log('viewer : ', viewer);
+
+            
+
+            const checkForLoadedBook = (isbn) => {
+                const result = viewer.isLoaded();
+                return result;
+            }
+
+            const alertNotFound = () => {
+                // alert("could not embed the book!");
+                console.log("could not embed the book!");
+            }
+            
+            const alertInitialized = () => {
+                // alert("book successfully loaded and initialized!");
+                console.log("book successfully loaded and initialized!");
+            }
+
+
+            formR.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                // Get the isbn
+                let isbn = ISBNfieldR.value;            
+                isbn = String(isbn);
+                isbn = isbn.replace(/\D/g,''); // Removes anything non-numeric
+                console.log('isbn (with everything non-numeric removed): ', isbn);
+
+
+                // Load the book with the isbn
+                viewer.load(`ISNB:${isbn}`, alertNotFound, alertInitialized);
+
+                
+            })
+
+
+
+
+            window.checkForLoadedBook = checkForLoadedBook;
+
+        }
+
+        
+
+        google.books.setOnLoadCallback(initialise);
+    </script>
+
+
+
+// PLEASE NOTE - the variables declarations from the script above (script 2 i believe) are recognised down here. For instance, formR is recognised as a variables in this script below. If you don't believe, uncomment the next line.
+// console.log('script3 ; formR : ', formR);
+
+
+
+
+
+<!-- <form action="/api/addToCollection" method="post" id="addToCollectionForm">
+                    <label for="isbn">Type the isbn of the book you want to add to a collection here</label>
+                    <input type="text" name="isbn" id="isbnInputAddToCollectionForm">
+
+                    <label for="collection">Type the name of the collection you want to add the book to here</label>
+                    <input type="text" name="collection" id="collectionInputAddToCollectionForm">
+
+                    <input type="submit">
+                </form> -->
+
+
+
+
+
+
+                <!-- <img id="viewerCanvasDiv">
+
+                <div id="informationDiv">
+                        <div id="titleDiv"> Title </div>
+                        <div id="subtitleDiv"> Subtitle </div>
+                        <div id="authorDiv"> Author </div>
+                        <div id="datePublishedDiv"> Date Published </div>
+                        <div id="descriptionDiv"> Description </div>
+                    </div> -->
+
+                <!-- <div class="bookDiv" id="TEMPbookDiv">
+                    <div class="bookLeftPanel">
+                        Will hold thumbnail
+                    </div>
+                    <div class="bookRightPanel">
+                        <div class="bookTopPanel">Will hold title</div>
+                        <div class="bookBottomPanel">Will hold other metadata</div>
+                    </div>
+                </div> -->
+
+
+
+
+
+<!-- <h2>Your collections</h2> -->
+
+            <!-- <form action="/api/readACollection" method="get" id="readACollectionForm">
+                <label for="collection_name">Type in your collection name to fetch the books inside of here</label>
+                <input type="text" name="collection_name" id="collection_nameInputreadACollectionForm">
+                
+                <input type="submit">
+            </form> -->
+
+<!-- <button id="loadCollectionsButton">Click me to load your collections</button> -->
+            
+            <!-- <div id="bedroomBooks">
+                <h3>Bedroom Books</h3>
+            </div>
+
+            <div id="kitchenCookbooks">
+                <h3>Kitchen Cookbooks Books</h3>
+            </div> -->
+
+
+
+        // const bookLeftPanelR = document.querySelector('#bookLeftPanel');
+        // const bookTopPanelR = document.querySelector('#bookTopPanel');
+        // const bookBottomPanelR = document.querySelector('#bookBottomPanel');
+
+        // console.log('bookLeftPanelR : ', bookLeftPanelR);
+        // console.log('bookTopPanelR : ', bookTopPanelR);
+        // console.log('bookBottomPanelR : ', bookBottomPanelR);
+
+
+// loadCollectionsButtonR.addEventListener('click', (event) => {
+        //     console.log('loadCollectionsButtonR el called');
+        //     event.preventDefault();
+
+        //     loadCollections()
+        // });
+
+ // readACollectionFormR.addEventListener('submit', async (event) => {
+        //     event.preventDefault();
+        //     console.log('readACollectionFormR has been submitted');
+
+        //     const collection_name = collection_nameInputreadACollectionFormR.value;
+        //     console.log('collection_name : ', collection_name);
+
+        //     readACollection(collection_name);
+            
+        // });
+
+
+
+
+<div id="checkABook" class="formSection">
+    <!-- <h3>Find a book </h3> -->
+    <section class="sectionForm">
+        <form action="/api/volumes?" method="GET" id="SearchForBooksForm">
+            <h1>Check the details of your book first</h1>
+            <div id="inputOne">
+                <label for="ISBNfield">ISBN:</label>
+                <input type="text" id="ISBNfield" name="ISBN" placeholder="E.g. 0-333-71093-2">
+            </div>
+
+            <input type="submit" id="submitButton" name="submitButton" placeholder="Submit" value="Find book">
+        </form>
+
+        <p>All information is pulled from the 
+            <a href="https://developers.google.com/books/docs/v1/using">Google Books API</a>
+        </p>
+    </section>
+
+    <section id="resultsDiv">
+
+        <img id="viewerCanvasDiv">
+
+        <!-- <div id="informationDiv">
+            <div id="titleDiv"> Title </div>
+            <div id="subtitleDiv"> Subtitle </div>
+            <div id="authorDiv"> Author </div>
+            <div id="datePublishedDiv"> Date Published </div>
+            <div id="descriptionDiv"> Description </div>
+        </div> -->
+    </section>
+</div>

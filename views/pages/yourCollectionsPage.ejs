@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/yourCollectionsPage.css">
+    <title>Your collections</title>
+</head>
+<body>
+    <header><% if (user) { %>
+            <%- include('../partials/header-logged-in.ejs'); %>
+          <% } else if (!user) { %>
+            <%- include('../partials/header-not-logged-in.ejs'); %>
+          <% } else { %>
+            <%- console.log("su'in else") %>
+          <% } %>
+
+    </header>
+
+    <main>
+
+        <section id="leftPanel">
+            <h2>Your collections:</h2>
+            <ol id="collectionsList">
+            </ol>
+
+            <section id="postUserCollectionFormSection" class="formSection">
+                <h3><i>Make a new collection</i></h3>
+                <form action="/api/postUserCollection" method="post" id="postUserCollectionForm"> 
+
+                    <div id="inputOne">
+                        <label for="collection">Name:</label>
+                        <input type="text" name="collection" id="collectionInput" placeholder="example: Bedroom Books">
+                    </div>
+
+                    <input type="submit" placeholder="submit" value="Go">
+                </form>
+            </section>
+
+        </section>
+
+        <section id="mainContent">
+            <div id="topDiv">
+                <h1 id="libraryTitle"></h1>
+            </div>
+
+            <div id="libraryActionsDiv">
+                <!-- <button>Delete this library</button>
+                <button>Change the name of this library</button> -->
+            </div>
+
+            
+
+            
+
+            <div id="booksDiv">
+            </div>
+        </section>
+
+
+        
+
+
+        <!-- <section id="random">
+            <form action="/api/deleteCollection" method="" id="deleteACollectionForm">
+                <label for="collection_name">collection_name</label>
+                <input type="text" name="collection_name" id="collection_nameInputdeleteACollectionForm">
+
+                <input type="submit">
+            </form>
+        </section> -->
+
+    </main>
+
+    <script>
+        // const loadCollectionsButtonR = document.querySelector('#loadCollectionsButton');
+        const collectionsListR = document.querySelector('#collectionsList');
+        const postUserCollectionFormR = document.querySelector('#postUserCollectionForm');
+        const collectionInputR = document.querySelector('#collectionInput');
+        // const readACollectionFormR = document.querySelector('#readACollectionForm');
+        const collection_nameInputreadACollectionFormR = document.querySelector('#collection_nameInputreadACollectionForm');
+        const booksDivR = document.querySelector('#booksDiv');
+        const mainContentR = document.querySelector('#mainContent');
+        const libraryTitleR = document.querySelector('#libraryTitle');
+        const topDivR = document.querySelector('#topDiv');
+        const libraryActionsDivR = document.querySelector('#libraryActionsDiv');
+
+
+        // console.log('loadCollectionsButtonR : ', loadCollectionsButtonR);
+        console.log('collectionsListR : ', collectionsListR);
+        console.log('postUserCollectionFormR : ', postUserCollectionFormR);
+        console.log('collectionInputR : ', collectionInputR);
+        // console.log('readACollectionFormR : ', readACollectionFormR);
+        console.log('collection_nameInputreadACollectionFormR : ', collection_nameInputreadACollectionFormR);
+        console.log('booksDivR : ', booksDivR);
+        console.log('mainContentR : ', mainContentR);
+        console.log('libraryTitleR : ', libraryTitleR);
+        console.log('topDivR : ', topDivR);
+        console.log('libraryActionsDivR : ', libraryActionsDivR);
+
+
+
+        const bookDivTemplateInnerHtml = `
+            <div class="bookLeftPanel">
+            </div>
+            <div class="bookRightPanel">
+                <div class="bookTopPanel"></div>
+                <div class="bookBottomPanel">
+                    <div id="subtitleDiv"></div>
+                    <div id="authorsDiv"></div>
+                    <div id="datePublishedDiv"></div>
+                    <div id="descriptionDiv"></div>
+                      
+                </div>
+            </div>
+        `
+
+        const addToCollectionFormTEMPLATE = `
+        <section id="addToCollectionFormSection" class="formSection">
+            <h3> Add a book to your library here </h3>
+            <form action="/api/addToCollection" method="post" id="addToCollectionForm">
+                
+                <div id="inputOne"> 
+                    <label for="isbn">ISBN: </label>
+                    <input type="text" name="isbn" id="isbnInputAddToCollectionForm">
+                </div>
+
+                <input type="submit" value="Add book to collection">
+            </form>
+        </section>`;
+
+        const updateNameOfCollectionTEMPLATE = `
+        <section class="formSection" id="updateACollectionNameFormSection">
+            <h1>Change the name of this library</h1>
+            <form action="/api/updateACollectionName" method="PUT" id="updateACollectionNameForm">
+                <div id="inputOne">
+                    <label for="newCollection_name"> Change the collection name:</label>
+                    <input type="text" name="newCollection_name" id="newCollection_nameInput">
+                </div>
+
+                <input type="submit" class="submitButton">
+            </form>
+        </section>
+        `
+
+        // GLOBAL VARIABLES
+        let globalRowsArr = [];
+
+        const fetchUserCollections = async() => {
+            const url = '/api/getUserCollections';
+            const response = await fetch(url, {
+                method: 'GET'
+                // body: {
+                //     collection: 'yes'
+                // }
+            })
+
+            const result = await response.json();
+            const rows = result.rows;
+
+            console.log('response : ', response);
+            console.log('result : ', result);
+            console.log('rows : ', rows);
+
+            // To use the fetched rows elsewhere in the program, store them in the global varialbe 'globalRowsArr'
+            globalRowsArr = rows;
+
+            return rows;
+        }
+        
+        const populateListWithCollections = (rows) => {
+            console.log('populateListWithCollections FUNC called');
+            console.log('rows.length : ', rows.length);
+
+            collectionsListR.innerHTML = ``;
+            
+
+            for (let i = 0; i < rows.length; i++) {
+                console.log('i : ', i);
+
+                let newLi = document.createElement('li');
+                const newId = `collectionName${i}`;
+                newLi.classList += 'collectionNameLi';
+                newLi.id = newId;
+                newLi.innerHTML = rows[i].collection_name;
+                collectionsListR.appendChild(newLi);
+
+
+                // Doing what .map() would but in the loop instead (maybe less efficient, idk)
+                // console.log('globalRowsArr[i] : ', globalRowsArr[i]);
+
+                globalRowsArr[i]['htmlNodeId'] =  newId;
+            }
+
+            // Add something saying: 'You don't have any collections yet if the user doesn't have any collections yet
+            if (rows.length == 0) {
+                console.log('(rows.length == 0)');
+                collectionsListR.innerHTML = `You don't have any collections yet!`;
+
+            }
+        }
+
+        const loadCollections = async () => {
+            console.log('loadCollections FUNC called');
+
+            // Fill the space where the rows would go with 'loading'
+            collectionsListR.innerHTML = `Loading...`;
+
+            // Fetch the collections the user has
+            const rows = await fetchUserCollections();
+            console.log('(el) rows : ', rows);
+
+            // Populate the ol element in the html with the result
+            populateListWithCollections(rows)
+        }
+
+        
+
+            
+        
+
+        postUserCollectionFormR.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (collectionInputR.value) {
+                console.log('(collectionInputR.value)');
+
+                const collection = collectionInputR.value;
+
+                const result = await postCollectionData(collection);
+
+                loadCollections();
+                let lastChild = collectionsListR.children;
+                console.log('lastChild : ', lastChild);
+                dealWithCollectionListR();
+            } else {
+                console.log('!(collectionInputR.value)');
+
+            }
+
+            
+        });
+        
+
+        const postCollectionData = async(collection) => {
+            console.log('collection : ', collection);
+
+            const url = '/api/postUserCollection';
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                }, 
+                body: JSON.stringify({
+                    "collection": collection
+                }
+                )
+            })
+
+            const result = await response.json();
+
+            console.log('response : ', response);
+            console.log('result : ', result);
+
+            return result;
+        }
+
+        const getCollection_nameOfCurrentClickedLi = () => {
+            const clickedLi = document.getElementsByClassName('clicked');
+                console.log("clickedLi['0'] : ", clickedLi['0']);
+                console.log("clickedLi['0'].id : ", clickedLi['0'].id);
+                const index = globalRowsArr.findIndex((row) => (row['htmlNodeId'] == clickedLi['0'].id))
+                console.log('index :', index);
+                const collection_name = globalRowsArr[index].collection_name
+                console.log('collection_name :', collection_name);
+
+                return collection_name;
+        }
+
+        const readACollection = async(collection_name) => {
+
+            // Show the user that it is loading the info about the books
+            booksDivR.innerHTML = `Loading...`;
+
+            // Clear the topDiv, then show the name of the library at the top of mainContentR
+            topDivR.innerHTML = ``;
+            const tempTitleChild = document.createElement('h1');
+            tempTitleChild.id = 'libraryTitle';
+            tempTitleChild.innerHTML = `${collection_name}`;
+            topDivR.appendChild(tempTitleChild);
+
+            const tempFormChild = document.createElement('div');
+            tempFormChild.innerHTML = addToCollectionFormTEMPLATE.replace('Add a book to your library here', `Add a book to '${collection_name}' here`);
+            topDivR.appendChild(tempFormChild);
+            tempFormChild.addEventListener('submit', async (event) => {
+                console.log('tempFormChild FORM has been SUBMITTED');
+                event.preventDefault();
+
+                const collection_name = getCollection_nameOfCurrentClickedLi();
+
+
+                const isbn = document.getElementById('isbnInputAddToCollectionForm').value;
+                
+
+
+                await addBookToCollection(isbn, collection_name);
+
+                readACollection(collection_name)
+            });
+
+
+            libraryActionsDivR.innerHTML = ``;
+
+            // Delete Collection Button functionality
+            const deleteLibraryButton = document.createElement('button');
+            deleteLibraryButton.innerHTML = 'Delete this collection';
+            deleteLibraryButton.id = 'deleteCollectionButton'
+            deleteLibraryButton.addEventListener('click', async () => {
+                const collection_name = getCollection_nameOfCurrentClickedLi();
+                await deleteACollection(collection_name);
+                location.reload();
+            });
+            libraryActionsDivR.appendChild(deleteLibraryButton);
+
+            // // Update Collection Name button functionality 
+            // const updateNameOfCollectionButton = document.createElement('button');
+            // updateNameOfCollectionButton.innerHTML = 'Update the name of this collection';
+            // updateNameOfCollectionButton.addEventListener('click', () => {
+            //     console.log("updateNameOfCollectionButton EL says it's been clicked")
+            //     const currentCollection_name = getCollection_nameOfCurrentClickedLi();
+
+            //     console.log('just before summonUpdateCollectionNameBox FUNC');
+            //     summonUpdateCollectionNameBox(currentCollection_name);
+
+
+            // })
+            // console.log('updateNameOfCollectionButton : ', updateNameOfCollectionButton);
+            // console.log('libraryActionsDivR : ', libraryActionsDivR);
+            // libraryActionsDivR.appendChild(updateNameOfCollectionButton);
+
+
+
+            const url = `/api/readACollection?collection_name=${collection_name}`;
+
+            const response = await fetch(url);
+            // console.log('response : ', response);
+
+            const result = await response.json();
+            console.log('(la) result : ', result);
+
+            const books = result.booksDetail;
+            let booksArr = [];
+
+            booksDivR.innerHTML = ``;
+            for (let i = 0; i < books.length; i++ ) {
+                console.log('i : ', i);
+
+                const book = books[i].newResults;
+                booksArr.push(book);
+
+                const newBookDiv = createBookDiv();
+                showLoading(newBookDiv);
+                showDataInNewBookDiv(book, newBookDiv);
+            }
+            if (books.length === 0) {
+                booksDivR.innerHTML = `No books in this library yet!`;
+            }
+            
+            console.log('booksArr : ', booksArr);
+        }
+
+
+        const createBookDiv = () => {
+            const newBookDiv = document.createElement('div');
+            newBookDiv.innerHTML = bookDivTemplateInnerHtml;
+            const numOfChildren = booksDiv.children.length;
+            console.log('numOfChildren : ', numOfChildren);
+            newBookDiv.id = `bookDivWithId${String(Number(numOfChildren) +1)}`;
+            newBookDiv.classList += 'bookDiv';
+
+            console.log('newBookDiv : ', newBookDiv);
+            // const newBookDivR = 
+
+            return newBookDiv;
+        }
+
+
+        const showLoading = (bookDiv) => {
+            bookDiv.innerHTML = ``;
+
+            console.log('(showLoading) bookDiv : ', bookDiv);
+
+            const tempChild = document.createElement('p');
+            tempChild.innerHTML = `Loading...`;
+
+            bookDiv.appendChild(tempChild);
+
+        }
+
+        const showDataInNewBookDiv = (data, newBookDiv) => {
+            // showDataInDiv function
+
+            newBookDiv.innerHTML = bookDivTemplateInnerHtml;
+            
+            let imgChild = document.createElement('img');
+            imgChild.src = data.thumbnail;
+            newBookDiv.children[0].appendChild(imgChild);
+
+            let titleChild = document.createElement('h1');
+            titleChild.innerHTML = data.title;
+            newBookDiv.children[1].children[0].appendChild(titleChild);
+            if (data.subtitle) {
+                let subtitleChild = document.createElement('h2');
+                subtitleChild.innerHTML = data.subtitle;
+                newBookDiv.children[1].children[1].appendChild(subtitleChild);
+            }
+            if (data.isbn) {
+                let isbnChild = document.createElement('p');
+                isbnChild.innerHTML = data.isbn;
+                newBookDiv.children[1].children[1].appendChild(isbnChild);
+            }
+            if (data.authors) {
+                let authorsChild = document.createElement('p');
+                authorsChild.innerHTML = data.authors;
+                newBookDiv.children[1].children[1].appendChild(authorsChild);
+            }
+            if (data.datePublished) {
+                let datePublishedChild = document.createElement('p');
+                datePublishedChild.innerHTML = data.datePublished;
+                newBookDiv.children[1].children[1].appendChild(datePublishedChild);
+            }
+            if (data.description) {
+                let descriptionChild = document.createElement('p');
+                descriptionChild.innerHTML = data.description;
+                newBookDiv.children[1].children[1].appendChild(descriptionChild);
+            }
+
+            booksDivR.appendChild(newBookDiv);
+        }
+
+        // This EL checks for when the user presses anywhere on the ol, so it can fetch the books in that library using other functions depepnding on what the event.target is 
+        collectionsListR.addEventListener('click', (event) => {
+            console.log('collectionsListR EL called. \n collectionsListR has been clicked');
+            console.log('event.target : ', event.target);
+            console.log('event.target.tagName : ', event.target.tagName);
+
+            // Only do stuff if you've actually touched an li or a element
+            if (event.target.tagName == 'LI') {
+                console.log("(event.target.tagName === 'li') ");
+
+                dealWithCollectionListR(event.target);
+
+            }
+        });
+
+
+        const dealWithCollectionListR = (target) => {
+            // First, remove the green color from whatever collection_name had it before
+                for (const collection of globalRowsArr) {
+                    console.log('collection : ', collection);
+                    let tempCollectionR = document.getElementById(String(collection.htmlNodeId));
+                    console.log('tempCollectionR : ', tempCollectionR);
+                    console.log('tempCollectionR.classList : ', tempCollectionR.classList);
+                    tempCollectionR.classList = '';
+                }
+            
+
+                let htmlNodeId = target.id;
+                console.log("htmlNodeId : ", htmlNodeId);
+
+                target.classList += 'clicked';
+
+                // const collection_id = globalRowsArr;
+
+                const index = globalRowsArr.findIndex((row) => (row['htmlNodeId'] == htmlNodeId))
+
+                console.log('index : ', index);
+                console.log('globalRowsArr[index] : ', globalRowsArr[index]);
+                console.log('globalRowsArr[index].collection_name : ', globalRowsArr[index].collection_name);
+
+                
+
+                readACollection(globalRowsArr[index].collection_name)
+        }
+
+
+        const addBookToCollection = async (isbn, collection) => {
+            console.log('addBookToCollection FUNC called');
+            console.log('isbn : ', isbn);
+
+            // Regex to sanitise the isbn
+            isbn = isbn.replace(/\D/g,''); // Removes anything non-numeric
+            console.log('isbn : ', isbn);
+
+            const url = '/api/addToCollection';
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    isbn: isbn,
+                    collection: collection
+                })
+            }
+
+            const response = await fetch(url, options);
+        }
+
+        const deleteACollection = async(collection_name) => {
+            console.log('deleteACollection FUNC called')
+            console.log('collection_name : ', collection_name);
+
+            const url = `/api/deleteCollection?collection_name=${collection_name}`;
+            const options = {
+                'method': 'delete'
+            }
+
+            const response = await fetch(url, options);
+            const result = await response.json();
+
+            return result
+        }
+
+        const updateAColletionName = async (currentCollection_name, newCollection_name) => {
+            const url = '/api/updateACollectionName';
+            const options = {
+                'method': 'PUT',
+                'headers': {
+                    "Content-Type": "application/json"
+                }, 
+                'body': JSON.stringify({
+                    "collection_name": currentCollection_name,
+                    "newCollection_name": newCollection_name
+                })
+            }
+
+            const response = await fetch(url, options);
+            const result = await response.json()
+            return result
+        }
+
+        const summonUpdateCollectionNameBox = (currentCollection_name) => {
+            console.log('summonUpdateCollectionNameBox FUNC called');
+            console.log('currentCollection_name : ', currentCollection_name);
+
+
+            const updateCollectionNameBox = document.createElement('section');
+            updateCollectionNameBox.id = 'updateACollectionNameFormSection';
+            updateCollectionNameBox.classList += 'sectionForm';
+            updateCollectionNameBox.innerHTML = `${updateNameOfCollectionTEMPLATE}`;
+            
+            const mainR = document.getElementsByTagName('main')[0]
+            console.log('mainR : ', mainR);
+            mainR.appendChild(updateCollectionNameBox)
+
+
+            const newCollection_nameInput = document.querySelector('#newCollection_nameInput');
+            console.log("newCollection_nameInput : ", newCollection_nameInput);
+            
+
+            currentCollection_name = getCollection_nameOfCurrentClickedLi();
+            // const newCollection_nameInput = document.createElement('input');
+            // newCollection_nameInput.type = 'text';
+            // newCollection_nameInput.name = 'newCollection_name';
+            // newCollection_nameInput.id = 'newCollection_nameInput';
+
+            const newCollection_nameInputR = document.querySelector('#newCollection_nameInput')
+            
+            console.log("newCollection_nameInputR : ", newCollection_nameInputR);
+
+            newCollection_nameInputR.value = currentCollection_name;
+
+            const updateACollectionNameFormR = document.querySelector('#updateACollectionNameForm');
+            console.log('updateACollectionNameFormR : ', updateACollectionNameFormR);
+
+            console.log('just before, currentCollection_name : ', currentCollection_name);
+
+                
+
+            const dealWithUpdateACollectionFormBeingSubmitted = async (currentCollection_name) => {
+                console.log('newCollection_nameInputR submitted EL')
+                console.log('BLABLA currentCollection_name : ', currentCollection_name);
+                const newCollection_name = newCollection_nameInputR.value
+
+                console.log('currentCollection_name : ', currentCollection_name);
+                const response = await updateAColletionName(currentCollection_name, newCollection_name)
+                console.log('ALALA response : ', response);
+            }
+
+            updateACollectionNameFormR.addEventListener('submit',  async (event,currentCollection_name) => {
+                event.preventDefault();
+                const response = await dealWithUpdateACollectionFormBeingSubmitted(currentCollection_name)
+            })
+            
+
+            // updateNameOfCollectionTEMPLATE
+            
+        }
+
+
+
+
+        console.log(`
+        <section class="formSection" id="updateACollectionNameFormSection">
+            <h1>Change the name of your library</h1>
+            <form action="/api/updateACollectionName" method="PUT" id="updateACollectionNameForm">
+                <div id="inputOne">
+                    <label for="newCollection_name"> Change the collection name:</label>
+                    <input type="text" name="newCollection_name" id="newCollection_nameInput">
+                </div>
+
+                <input type="submit" class="submitButton">
+            </form>
+        </section>
+        `)
+
+        document.addEventListener("DOMContentLoaded", async (event) => {
+            console.log("DOM fully loaded and parsed");
+            await loadCollections();
+
+            // Dispatch Event of a click to the first child in the collections
+            dealWithCollectionListR(collectionsListR.children[0]);
+        });
+
+
+
+        window.globalRowsArr = globalRowsArr;
+        window.deleteACollection = deleteACollection;
+        window.getCollection_nameOfCurrentClickedLi = getCollection_nameOfCurrentClickedLi;
+        window.updateAColletionName = updateAColletionName;
+
+    </script>
+
+    
+</body>
+</html>

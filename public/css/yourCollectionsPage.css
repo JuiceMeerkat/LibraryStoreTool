@@ -1,0 +1,196 @@
+main {
+    display: flex;
+    flex-direction: row;
+
+
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+body {
+    margin: 0px;
+}
+
+#leftPanel {
+    width: 35vw;
+
+    background-color: #D9D7DD;
+
+    padding: 30px;
+
+    font-size: 20px;
+
+    border-right: 7px #B07BAC solid;
+}
+
+#mainContent {
+    width: 65vw;
+
+    background-color: #D9D7DD;
+
+    padding: 30px;
+
+    font-size: 40px;
+
+}
+
+/* form {
+    margin: 20px;
+} */
+
+li:hover {
+    /* color: green; */
+    font-weight: bold;
+
+    cursor: grab;
+
+}
+
+.clicked {
+    color: #B0C397;
+    font-weight: bold;
+}
+
+li {
+    font-size: 30px;
+    width: fit-content;
+
+
+}
+
+.bookTopPanel {
+    font-size: 15px;
+}
+
+.bookBottomPanel {
+    font-size: 15px;
+}
+
+.bookDiv {
+    display: flex;
+    flex-direction: row;
+
+    outline: 2px solid #252D28;
+
+    margin: 10px;
+    margin-bottom: 30px;
+
+    border-radius: 20px;
+}
+
+.bookRightPanel {
+    display: flex;
+    flex-direction: column;
+}
+
+#topDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+#topDiv form {
+    font-size: 15px;
+
+    /* outline: 1px black solid; */
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+#topDiv form input, label {
+    margin: 10px;
+
+    /* width:  */
+}
+
+.formSection {
+    /* margin: 40px; */
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    /* justify-content: center;
+    align-items: left; */
+
+    border-radius: 20px;
+
+    background-color: #E6FDFF;
+
+    width: fit-content;
+}
+
+.formSection h3 {
+    margin: 10px;
+
+    color: #252D28;
+
+    font-size: 25px;
+
+}
+
+form #inputOne {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+
+    margin-bottom: 10px;
+
+    font-size: 18px;
+}
+
+form #inputOne input, label{
+    margin: 1px;
+
+    /* background-color: lightsteelblue; */
+
+    color:  #252D28;
+
+    
+    margin-right: 10px;
+    
+
+    /* outline: 1px solid black; */
+
+}
+
+
+
+
+
+/* 
+form input {
+    height: fit-content;
+    width: fit-content;
+} */
+
+.bookLeftPanel {
+    margin: 20px;
+}
+
+#deleteCollectionButton {
+    margin: 10px;
+}
+
+#libraryTitle {
+    font-size: 50px;
+
+    margin: 5px;
+}
+
+#updateACollectionNameFormSection {
+    position: absolute;
+
+    top: 50vh;
+    left: 30vw;
+}
+
+.closeNotificationButton {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+}

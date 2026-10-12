@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/registerPage.css">
+    <title>Document</title>
+</head>
+<body>
+    <header><% if (user) { %>
+            <%- include('../partials/header-logged-in.ejs'); %>
+          <% } else if (!user) { %>
+            <%- include('../partials/header-not-logged-in.ejs'); %>
+          <% } else { %>
+            <%- console.log("su'in else") %>
+          <% } %>
+    </header>
+    
+    <main id="mainContent">
+
+
+        <section class="formSection">
+
+            <h1>Register</h1>
+            <form action="/api/auth/register" method="POST" id="registerForm">
+
+                <div id="inputOne">
+                    <label for="username">Name</label>
+                    <input type="username" id="usernameInput" name="username">
+                </div>
+                
+                <div id="inputTwo">
+                    <label for="email">Email</label>
+                    <input type="email" id="emailInput" name="email">
+                </div>
+                <div id="inputThree">
+                    <label for="password">Password</label>
+                    <input type="password" id="passwordInput" name="password">
+                </div>
+
+                <!-- <label for="submit">Submit</label> -->
+                <input type="submit" id="submitInput" value="Create my account">
+            </form>
+
+        </section>
+
+        <section id="sectionForNotification">
+
+        </section>
+
+
+        
+    </main>
+
+
+    <script>
+
+        const mainContentR = document.querySelector('#mainContent');
+        const sectionForNotificationR = document.querySelector('#sectionForNotification');
+        const registerFormR = document.querySelector('#registerForm');
+        const usernameInputR = document.querySelector('#usernameInput');
+        const emailInputR = document.querySelector('#emailInput');
+        const passwordInputR = document.querySelector('#passwordInput');
+
+        console.log('sectionForNotificationR : ', sectionForNotificationR);
+        console.log('registerFormR : ', registerFormR);
+        console.log('usernameInputR : ', usernameInputR);
+        console.log('emailInputR : ', emailInputR);
+        console.log('passwordInputR : ', passwordInputR);
+        console.log('mainContentR : ', mainContentR);
+
+        const notificationSuccessfulTEMPLATE = `
+            <h1 class="heading">Registration Successful</h1>
+            <div class="closeNotificationButton"> x </div>
+        `
+        const notificationFailedTEMPLATE = `
+            <h1 class="heading">Registration Failed</h1>
+            <div class="closeNotificationButton"> x </div>
+        `
+
+        const registerUsingFetch = async (username, password, email) => {
+            console.log('registerUsingFetch FUNC called');
+
+            const url = 'api/auth/register';
+            const options = {
+                'method': 'post',
+                'headers': {
+                    "Content-Type": "application/json"
+                },
+                'body': JSON.stringify({
+                    'username': username,
+                    'password': password,
+                    'email': email
+                })    
+            }
+
+            const response = await fetch(url, options);
+            const result = await response.json()
+
+            return result
+        }
+
+        const addNotificationBanner = (result, intervalKillTime) => {
+            let tempChild;
+
+            if (result.status == 200) {
+                console.log('(result.status == 200)');
+
+                tempChild = document.createElement('section');
+                tempChild.id = 'registeredNotificationSection';
+                tempChild.classList += 'notification';
+                tempChild.innerHTML = notificationSuccessfulTEMPLATE;
+                const tempP = document.createElement('p');
+                tempP.classList += 'message';
+                tempP.innerHTML = result['message for user'];
+                tempChild.appendChild(tempP)
+
+            } else if (result.status == 409) {
+                console.log('(result.status == 409)');
+
+                tempChild = document.createElement('section');
+                tempChild.id = 'registeredNotificationSection';
+                tempChild.classList += 'notification';
+                tempChild.innerHTML = notificationFailedTEMPLATE;
+                const tempP = document.createElement('p');
+                tempP.classList += 'message';
+                tempP.innerHTML = result['message for user'];
+                tempChild.appendChild(tempP);
+
+
+            } else {
+                console.log('something else entirely!')
+            }
+            sectionForNotificationR.innerHTML = ``;
+            sectionForNotificationR.appendChild(tempChild)
+        }
+
+
+        registerFormR.addEventListener('submit', async (event) => {
+            console.log('registerFormR has been submitted');
+            event.preventDefault();
+
+            const username = usernameInputR.value;
+            const password = passwordInputR.value;
+            const email = emailInputR.value;
+
+            // Register using fetch and username, password and email
+            const result = await registerUsingFetch(username, password, email);
+            console.log('result : ', result);
+
+            // Add notification banner
+            const intervalKillTime = 10
+            addNotificationBanner(result, intervalKillTime);
+        })
+    </script>
+</body>
+</html>

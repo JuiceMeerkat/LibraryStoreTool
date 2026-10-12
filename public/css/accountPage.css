@@ -1,0 +1,32 @@
+#accountCardDiv {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 30px;
+
+    /* outline: 7px solid #B3A8AA; */
+    width: fit-content;
+
+    padding: 40px;
+    padding-top: 20px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: #B3A8AA;
+}
+
+#accountCardDiv #mainSection {
+    display: flex;
+    flex-direction: row;
+}
+
+#mainSection #rightSection p {
+    margin: 5px;
+}
+
+#rightSection h3 {
+    margin: 20px;
+    margin-top: 5px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}

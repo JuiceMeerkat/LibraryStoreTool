@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/loginPage.css">
+    <title>Document</title>
+</head>
+<body>
+    <header><% if (user) { %>
+            <%- include('../partials/header-logged-in.ejs'); %>
+          <% } else if (!user) { %>
+            <%- include('../partials/header-not-logged-in.ejs'); %>
+          <% } else { %>
+            <%- console.log("su'in else") %>
+          <% } %>
+    </header>
+    
+    <main>
+        
+
+        <section class="formSection">
+
+            <h1>Login</h1>
+
+            <form action="/api/auth/login" method="POST" id="loginForm">
+                <div id="inputOne">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <div id="inputTwo">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password">
+                </div>
+
+                <input type="submit" value="Login" id="submitButton" >
+            </form>
+        </section>
+
+    </main>
+</body>
+</html>

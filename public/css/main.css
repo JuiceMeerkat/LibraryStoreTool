@@ -1,0 +1,252 @@
+/* This should be successfully connected if you remember that we set the link tags to do the href from the public folder. So access this file by going href='/css/main.css' */
+
+html, body {
+    /* padding: 0px; */
+    margin: 0px;
+
+    background-color: #D9D7DD;
+
+    font-family: Arial, Helvetica, sans-serif
+}
+
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    align-items: center;
+
+    /* background-color: linear-gradient(to bottom, rgb(185, 255, 185), white); */
+    background-color: #B07BAC;
+    padding: 5px;
+
+    /* outline: 5px lightgrey solid; */
+
+    position: fixed;
+    top: 0px;
+
+    width: 100vw;
+
+    padding-left: 20px;
+    padding-right: 20px;
+
+    font-family: Arial, Helvetica, sans-serif
+
+
+    /* border-bottom: 6px dashed black ; */
+    /* border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px; */
+}
+
+#linksSection {
+    display: flex;
+    flex-direction: row;
+
+    margin-right: 40px;
+}
+
+header h1 {
+    /* margin-right: 40px; */
+
+    font-size: 50x;
+
+    color: #252D28;
+}
+
+#linksSection div {
+    margin: 5px;
+    padding: 5px;
+}
+button, .button {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #B3A8AA;
+
+    font-size: 1.2rem;
+
+    border-radius: 10px;
+
+    border: none;
+
+    transition: 0.3s;
+
+    
+}   
+
+button:hover, .button:hover {
+    transform: translateY(-5px);
+    background-color: #B0C397;
+    /* background-color: rgb(255, 123, 123) */
+}
+
+main {
+    margin: 0px;
+    min-height: 100vh;
+
+    padding: 20px;
+
+    margin-top: 100px;
+
+    color: #252D28;
+    background-color: #D9D7DD;
+}
+
+main h2 {
+    margin: 0px;
+}
+
+main p {
+    font-size: 20px;
+}
+
+
+
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 10px;
+
+    width: fit-content;
+
+    outline: 1px solid black;
+}
+
+#registerForm input{
+    min-width: 100px;
+    width: 200px;
+
+    margin: 10px;
+}
+
+
+
+.formSection {
+    /* margin: 40px; */
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: left;
+
+    border-radius: 20px;
+
+    background-color: #DBF9F4;
+
+    outline: none;
+    border: none;
+
+    width: fit-content;
+}
+
+.formSection h1 {
+    margin: 10px;
+
+    color: #252D28;
+
+    font-size: 35px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+}
+
+/* #postUserCollectionForm #inputOne {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+
+    margin-bottom: 10px;
+
+    font-size: 18px;
+} */
+
+/* #postUserCollectionForm #inputOne input, label{
+    margin: 1px;
+    color:  #252D28;
+    margin-right: 10px;
+} */
+
+form #inputOne input, #inputTwo input, #inputThree input{
+    /* outline: 1px solid black; */
+
+    border: none;
+
+    background-color: #D9D7DD;
+
+    border-radius: 20px;
+
+    /* padding: calc((height / 2) + 10); */
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    min-width:100px;
+
+    color: #252D28;
+
+    /* margin-left: 10px;
+    padding: 5px; */
+    margin: 5px;
+
+    /* border-radius: 5px; */
+}
+
+
+form {
+
+    /* background-color: red; */
+    border: none;
+    outline: none;
+}
+
+
+form input {
+    height: fit-content;
+    width: fit-content;
+}
+
+
+
+.notification {
+    /* width: 400px;
+    height: 150px; */
+
+    background-color: #E6FDFF;
+
+    border: 3px solid #252D28;
+
+    position: fixed;
+    top: 100px;
+    right: 10px;
+
+    color: #252D28;
+
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+
+}
+
+.notification .heading {
+    font-size: 25px;
+}
+
+.notifcation .message{
+    font-size: 18px;
+}
+
+.closeNotificationButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+

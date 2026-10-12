@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/accountPage.css">
+</head>
+<body>
+    <header><% if (user) { %>
+            <%- include('../partials/header-logged-in.ejs'); %>
+          <% } else if (!user) { %>
+            <%- include('../partials/header-not-logged-in.ejs'); %>
+          <% } else { %>
+            <%- console.log("su'in else") %>
+          <% } %>
+    </header>
+
+    <main>
+        <h2>Welcome, <%= name %></h2>
+
+        <div id="accountCardDiv">
+            <div id="headerSection"></div>
+            <div id="mainSection">
+
+                <div id="leftSection"></div>
+
+                <div id="rightSection">
+                    <h3>Your account details</h3>
+                    <p>Username: <%= name %></p>
+                    <p>Email: <%= email %></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/homePage.css">
+    <title>Document</title>
+</head>
+<body>
+    <header><% if (user) { %>
+            <%- include('../partials/header-logged-in.ejs'); %>
+          <% } else if (!user) { %>
+            <%- include('../partials/header-not-logged-in.ejs'); %>
+          <% } else { %>
+            <%- console.log("su'in else") %>
+          <% } %>
+    </header>
+
+    <%- console.log('gyatuser : ', user) %>
+    <main>
+        <h1>Library Store Tool: a way to digitally store your home library in an online account so you can view and share your books with others</h1>
+
+        <section>
+    
+            <p>
+                If you really love books, and you have physical books whose details you want to record online, this site is for you
+            </p>
+
+            <p>Here's how to create your first collection and add a book to it:</p>
+
+                <ul>
+                <li>Start by clicking the Register button to set up an account </li> 
+
+                <li>Then click the Login button to sign in </li>
+
+                <li>Click the Your Collections button, then create a new collection using the ‘Make a new collection’ tool (e.g. Bedroom Books) </li>
+
+                <li>Click the name of your new collection, and add books to it by putting the ISBN into the box on the right </li>
+
+                </ul>
+            
+            <p>
+                You can also search for the details of any book, by clicking on the Find a Book button and entering an ISBN.
+            </p>
+
+            <section id="whatIsAnISBNdiv">
+                <img src="/images/CoverWithISBN.jpg" alt="" id="coverWithISBNimg">
+
+                <div id="textDiv">
+                    <h2>What is an ISBN?</h2>
+                    <p> An ISBN is a 10 or 13 digit number which can uniquely identify any book<br>
+                        Most of the time, you can turn over a book to find its ISBN near the barcode (see photo)<br>
+                        You can also find a book's ISBN on the page at the front of the book with publication information
+                    </p>
+                </div>
+
+            </section>
+
+        </section>
+    </main>
+
+
+    
+</body>
+</html>
